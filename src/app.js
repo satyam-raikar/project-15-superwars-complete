@@ -107,6 +107,7 @@ class Superwar {
         if (!target.hasAttribute('data-id'))
             return;
 
+        
         let selectedId = target.getAttribute('data-id');
         let selectedPlayer = this.players[selectedId];
         this.players.filter(player => player.type == selectedPlayer.type)
@@ -122,8 +123,11 @@ class Superwar {
     // Check for fight
     isFight = () => {
         // Type your code here
-
         // return  'clash' or 'peace';
+        if(this.players[0].strength>0&&this.players[1].strength>0)
+        return 'clash'
+        else
+        return 'peace'
     }
 
     // Fight
@@ -131,16 +135,24 @@ class Superwar {
         // Filtered the selected players and calculate score
         // Should return HTML element with score
         // Type your code here
-
+        
         if (this.checkWin() !== 'endure')
-            setTimeout(() => this.announceWinner(score), 100);
+            setTimeout(() => this.announceWinner(this.score), 100);
+        var score=this.calculateScore()
+        return `${score['hero']} - ${score['villain']}`
     }
 
     // Calculate score
     calculateScore = () => {
         // Calculate and return the total score of teams
         // Type your code here
-
+        var score=[];
+        this.players.map((data,index)=>{
+            if(data.wins==1)
+            score[data.type]=++this.score[index];
+            else
+            score[data.type]=this.score[index]
+        })
         return score;
     }
 
@@ -149,7 +161,13 @@ class Superwar {
         // Find the winner if exists return type hero or villain
         // If winner dosen't exists then return endure
         // Type your code here
-
+        var result=''
+        this.players.filter(data=>{
+            if(data.wins==1)
+                result=data.type
+        })
+        if(result=='')
+            return 'endure'
       return result;
     }
 
@@ -157,19 +175,23 @@ class Superwar {
     totalStrength = (type) => {
         // Calculate and return the total strength of the team
         // Type your code here
-
+        var strength=''
+        this.players.filter(data=>{
+            if(data.type==type)
+                strength=data.strength
+        })
         return strength;
     }
 
     // Announce the winner
     announceWinner = (score) => {
         if (score['hero'] == score['villain'])
-            alert('Its a draw!');
+            alert( 'Its a draw!')
         else if (score['hero'] > score['villain'])
-            alert('Heroes Win!');
+            return 'Heroes Win!'
         else
-            alert('Villains Win!');
-        location.reload();
+            return 'Villains Win!'
+        
     }
 }
 
